@@ -8,6 +8,6 @@ www.youtube.com/channel/UCvjgXvBlbQiydffZU7m1_aw
 Inspired also by Nerdologia, a brazilian channel about science and history
 www.youtube.com/channel/UClu474HMt895mVxZdlIHXEA
 
-I made this when i was a begginer in genetic algorithms, so it is not as clean as i wanted neither as efficient as it could be, it is a bit confused to understand.
+I made this when I was a begginer in genetic algorithms, so it is not as clean as i wanted neither as efficient as it could be, it is a bit confused to understand.
 
-Althought all these problems I learned a lot of concepts while making this program.
+Althought all these problems, I learned a lot of concepts while making this program.
