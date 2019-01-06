@@ -6,62 +6,43 @@
 //Inspired also by Nerdologia, a brazilian channel about science and history
 //www.youtube.com/channel/UClu474HMt895mVxZdlIHXEA
 
-var atual_melhor_mapa;
-cidades = [];
-numdecidades = 50;
-população = [];
-numdeindividuos = 1000;
-velha_população =[];
+var atual_melhor_mapa; //current best map
+var melhor_de_todos; //best map ever
+numdecidades = 50; //number of cities
+numdeindividuos = 500; //number of maps
+cidades = []; //cities
+população = []; //current population
+velha_população =[]; //previous population
 
 function setup() {
   createCanvas(1000,600);
   background(55);
 
-  for(var i = 0; i<numdecidades; i++){
+  for(var i = 0; i<numdecidades; i++){ //make the cities array
     cidades[i] = new Cidade();
   }
 
-  for(var i = 0; i<numdeindividuos; i++){
+  for(var i = 0; i<numdeindividuos; i++){ //make the population array
     população[i] = new Mapa();
     }
-    normaliza_custos();
+    normaliza_distancias();
     melhor_de_todos = calcula_melhor_mapa();
-    atual_melhor_mapa = população[0];
-    print(população,'prime')
   }
 
 function draw() {
-    velha_população = população.slice();
-    população = []
-    for(var i = 0; i<numdeindividuos; i++){
-      população[i] = crossing_over();
-      população[i].custo = calcula_custo(população[i].dna);
-      população[i].distancia = calcula_custo(população[i].dna);
-      }
-      normaliza_custos();
+  velha_população = população.slice(); //save the current population
+
+  for(var i = 0; i<numdeindividuos; i++){
+    população[i] = crossing_over();
+  }
+  normaliza_distancias();
   atual_melhor_mapa = calcula_melhor_mapa();
 
-  if(atual_melhor_mapa.distancia<melhor_de_todos.distancia){
+  if(atual_melhor_mapa.distancia < melhor_de_todos.distancia){
     melhor_de_todos = atual_melhor_mapa;
-    print(melhor_de_todos,'Melhor mapa de todos os tempos')
-    }
-
-
-background(55);
-  for(var i = 0; i<numdecidades; i++){
-    strokeWeight(8);
-    stroke(255);
-    point(cidades[i].posicao.x, cidades[i].posicao.y);
   }
-  for(var i = 0; i<numdecidades-1; i++){
-    strokeWeight(2);
-    stroke(255)
-    line(cidades[melhor_de_todos.dna[i]].posicao.x,cidades[melhor_de_todos.dna[i]].posicao.y,cidades[melhor_de_todos.dna[i+1]].posicao.x,cidades[melhor_de_todos.dna[i+1]].posicao.y)
-  }
-  strokeWeight(8);
-  stroke(0,255,0);
-  point(cidades[melhor_de_todos.dna[0]].posicao.x,cidades[melhor_de_todos.dna[0]].posicao.y);
-  //print(população[0].desenpenho)
+  desenha_caminho();
+
 }
 
 class Cidade {
@@ -74,7 +55,7 @@ class Cidade {
 }
 
 
-function calcula_melhor_mapa(){
+function calcula_melhor_mapa(){ //calculates the best map in the current population array
   var melhor = população[0];
 
   for(var i = 1; i<população.length; i++){
@@ -86,14 +67,23 @@ function calcula_melhor_mapa(){
   return melhor;
 }
 
-function normaliza_custos(){ //Normaliza os custos de todos os mapas
-  var total = 0;
-
-  for(var i = 0; i<população.length; i++){
-    população[i].custo = 1/(pow(população[i].custo,8)+1);
-    total = total + população[i].custo;
+function desenha_caminho(){ //draw the best path
+  background(55);
+  for(var i = 0; i<numdecidades-1; i++){
+    var posicao_array1 = melhor_de_todos.dna[i];
+    var posicao_array2 = melhor_de_todos.dna[i+1];
+    strokeWeight(2);
+    stroke(255)
+    line(cidades[posicao_array1].posicao.x,cidades[posicao_array1].posicao.y,
+         cidades[posicao_array2].posicao.x,cidades[posicao_array2].posicao.y);
   }
-  for(var i = 0; i<população.length; i++){
-    população[i].desenpenho = população[i].custo/total;
+  for(var i = 0; i<numdecidades; i++){ //draw the cities
+    stroke(255);
+    strokeWeight(8);
+    point(cidades[i].posicao.x,cidades[i].posicao.y);
   }
+  var posicao_array = melhor_de_todos.dna[0]; //the first city is green
+  strokeWeight(8);
+  stroke(0,255,0);
+  point(cidades[posicao_array].posicao.x, cidades[posicao_array].posicao.y);
 }
